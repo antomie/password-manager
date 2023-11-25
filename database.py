@@ -19,8 +19,10 @@ def add_password(u, p, a):
 def data():
     cur.execute("SELECT * FROM passwords;")
     result = cur.fetchall()
-    print(result)
+    return result
 
 
-
-
+connect()
+u = data()
+print (u)
+disconnect()

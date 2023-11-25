@@ -1,13 +1,55 @@
 import tkinter as tk
+from tkinter import ttk
 from secret import get_secret_key
 from database import connect, disconnect, data, add_password
 
 global key
 key = get_secret_key()
 
-'''class showAll():
+class showall():
     def __init__(self):
-'''
+        self.root = tk.Tk()
+        self.root.geometry("400x300")
+        top_bar = tk.Frame(self.root, height=50, bg='lightblue')
+        top_bar.pack(side=tk.TOP, fill=tk.X)
+
+        tk.Button(top_bar, text="UPDATE", width=400, command=self.update).pack()
+        
+        self.canvas = tk.Canvas(self.root)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        scrollbar = ttk.Scrollbar(self.root, orient=tk.VERTICAL, command=self.canvas.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        self.scrollable_frame = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor='nw')
+
+
+        self.scrollable_frame.bind("<Configure>", self.on_frame_configure)
+
+    def on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'))
+
+    def update(self):
+        connect()
+        udata = data()
+    
+        for button in self.scrollable_frame.winfo_children():
+            button.destroy()
+
+        for entry in udata:
+            self.name = entry[2]
+            self.btn = tk.Button(self.scrollable_frame, text=f"{self.name}", command=lambda id=self.name: self.button_click(id))
+            self.btn.pack(padx=10, pady=10)
+
+        disconnect()
+    def button_click(self, id):
+        print(f"Button {id} clicked!")
+
+
+
+    
 class insert():
     def __init__(self):
         self.root = tk.Tk()
@@ -76,6 +118,8 @@ class logged_in():
         connect()
         data()
         disconnect()
+        self.root.destroy()
+        showall()
     
     def inserts(self):
         self.root.destroy()
